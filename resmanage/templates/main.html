@@ -1,0 +1,106 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="{% static 'images/sd1.png' %}" type="image/x-icon">
+    <title>测试</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap-5.3.0/bootstrap.min.css' %}">
+    <script src="{% static 'js/echarts.min.js' %}"></script>
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/album.css' %}" rel="stylesheet">
+    <link href="{% static 'css/pricing.css' %}" rel="stylesheet">
+</head>
+<style>
+    body {
+        height:100%;
+        overflow:hidden;
+    };
+</style>
+<body>
+    <div id="loader" class="position-relative">
+        <div class="position-absolute top-50 start-50 translate-middle" style="width: 200px;height: 200px;">
+                <div class="sk-cube-grid">
+                    <div class="sk-cube sk-cube-1"></div>
+                    <div class="sk-cube sk-cube-2"></div>
+                    <div class="sk-cube sk-cube-3"></div>
+                    <div class="sk-cube sk-cube-4"></div>
+                    <div class="sk-cube sk-cube-5"></div>
+                    <div class="sk-cube sk-cube-6"></div>
+                    <div class="sk-cube sk-cube-7"></div>
+                    <div class="sk-cube sk-cube-8"></div>
+                    <div class="sk-cube sk-cube-9"></div>
+                </div>
+        </div>
+    </div>
+    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap-5.3.0/bootstrap.bundle.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/bootstrapValidator.min.js' %}"></script>
+
+    <div style="height:100%;">
+        {% include "head.html" %}
+
+        <div class="row page0">
+
+            {% include "aside.html" %}
+
+            <div class="cty col">
+                {% block index %}
+                {% endblock index %}
+            </div>
+        </div>
+    </div>
+
+    {% if messages %}
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <img src="{% static 'images/sd1.png' %}" class="rounded me-2 img-main" alt="...">
+                <strong class="me-auto">系统提示</strong>
+                <small class="text-body-secondary"></small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body text-center">
+                {% for msg in messages %}
+                    {{ msg.message }}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    {% endif %}
+
+
+</body>
+
+{% include "main_script.html" %}
+
+
+{% with url_name=request.get_full_path %}
+    {% if "verif" in url_name %}
+    <script>
+        
+        function loop(){
+            var temp = document.querySelector("#pagenum").innerText;
+            var num = parseInt(temp, 10);
+            //递归，每30s更新一次信息
+            get_res_list(page_num=num);
+            a = window.setTimeout("loop()", 30000);
+        }
+        loop();
+    </script>
+    {% elif "index" in url_name %}
+    <script>
+        function loop(){
+            //递归，每60s更新一次信息
+            get_Charts();
+            a = window.setTimeout("loop()", 60000);
+        }
+        loop();
+    </script>
+    {% endif %}
+{% endwith %}
+
+</html>

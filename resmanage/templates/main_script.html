@@ -1,0 +1,320 @@
+
+
+<script>
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+
+    var content = document.getElementById("seracharea");
+
+    function validateContent() {
+        if (content.value == null) {
+            content.setCustomValidity("搜索内容不能为空。");
+        } else {
+            content.setCustomValidity('');
+        }
+    };
+    content.onchange = validateContent;
+    content.onkeyup = validateContent;
+
+    function get_weather() {
+        var city = "Suzhou";
+        var cityname = "苏州市";
+        $.ajax({
+            url: '{% url "weather" %}',
+            method: "post",
+            dataType: "text",
+            data: {
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                "city": city
+            },
+            success: function (data) {
+                var data = JSON.parse(data);
+                $('#description').text(data["description"]);
+                $('#temp').text(data["temp"]);
+                $('#feel_temp').text(data["feels_temp"]);
+                $('#clouds').text(data["clouds"]);
+                $('#pressure').text(data["pressure"]);
+                $('#humi').text(data["humi"]);
+                $('#wind').text(data["wind"]["speed"]);
+                $('#sunrise').text(data["sunrise"]);
+                $('#sunset').text(data["sunset"]);
+                $('#city').text(cityname);
+                $("#icon").attr("src", "https://openweathermap.org/img/w/" + data["icon"] + ".png");
+                $('#loader').fadeOut(800);
+            }
+        });
+    };
+
+    function loop_check() {
+        //递归，每3分钟更新一次信息
+        get_weather();
+        a = window.setTimeout("loop_check()", 180000);
+        //window.clearTimeout(a);
+    }
+    loop_check();
+
+{% with url_name=request.get_full_path %}
+
+{% if "navi" in url_name or "audit" in url_name%}
+    function get_res_list(page_num = 1) {
+        const temp = document.querySelector("#pagekey").innerText;
+        const pagekey = parseInt(temp, 10);
+        $.ajax({
+            url: '{% url "get_res_list" %}',
+            method: "post",
+            dataType: "text",
+            data: {
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                "key": pagekey,
+                "page_num": page_num,
+            },
+            success: function (data) {
+                var data = JSON.parse(data);
+                const table = $('#vlist');
+                const pagein = $("#nav");
+                var start = data.current_start;
+                var page = data.page;
+                var is_paginated = data.is_paginated;
+                var if_has_previous = data.if_has_previous;
+                var if_has_next = data.if_has_next;
+                var num_page = data.page_last;
+                var pagenum = data.pagenum;
+                $("#pagenum").text(pagenum);
+
+                if (is_paginated) {
+                    pagein.empty();
+                    var paginationContent = '';
+                    for (var i = 1; i < num_page + 1; i++) {
+                        if (pagenum == i) {
+                            paginationContent +=
+                                `<li class="page-item active"><span class="page-link">${i}<span class="sr-only"></span></span></li>`;
+                        } else {
+                            paginationContent +=
+                                `<li class="page-item"><a class="page-link" href="javascript:viod(0)" onclick="get_res_list(page_num=${i})">${i}</a></li>`;
+                        }
+                    };
+                    pagein.append(paginationContent);
+
+                    if (if_has_previous) {
+                        var pre_page = pagenum - 1;
+                        pagein.prepend(
+                            '<li class="page-item"><a class="page-link" href="javascript:viod(0)" onclick="get_res_list(page_num=' +
+                            pre_page + ')">上一页</a></li>');
+                    } else {
+                        pagein.prepend(
+                            '<li class="page-item disabled"><span class="page-link">上一页</span></li>');
+                    };
+                    if (if_has_next) {
+                        var next_page = pagenum + 1;
+                        pagein.append(
+                            '<li class="page-item"><a class="page-link" href="javascript:viod(0)" onclick="get_res_list(page_num=' +
+                            next_page + ')">下一页</a></li>');
+                    } else {
+                        pagein.append(
+                            '<li class="page-item disabled"><span class="page-link">下一页</span></li>');
+                    }
+                };
+
+                table.empty(); // 清空表格内容 
+                for (var i = 0; i < page.length; i++) {
+                    var item = page[i];
+                    var startdate = item.res_start_time.substring(0, 10);
+                    if (item.inviter != null) {
+                        var inviter = item.inviter.username;
+                    } else {
+                        var inviter = "无";
+                    };
+                    if (item.audit_staff != null) {
+                        var audit_staff = item.audit_staff.username;
+                    } else {
+                        var audit_staff = "无";
+                    };
+
+                    if (pagekey == 0) {
+                        var row = `  
+                            <tr>  
+                            <th class="tbr align-middle" scope="row">${i + 1 + start}</th>  
+                            <td class="tbr align-middle">${item.res_user.username}</td>  
+                            <td class="tbr align-middle">${item.id}</td>
+                            <td class="tbr align-middle">${startdate}</td>  
+                            <td class="tbr align-middle">${item.res_start_time.slice(-5)} - ${item.res_dec_time.slice(-5)}</td>
+                            <td class="tbr align-middle">${item.device.name}</td>  
+                            
+                            <td class="tbr align-middle" >${item.state}</td>
+                            <td class="tbr align-middle">${audit_staff}</td>  
+                            <td class="tbr align-middle">${inviter}</td>  
+                            <td>  
+                            <button class="btn btn-info btn-sm">操作1</button>
+                            </td>  
+                            </tr>  
+                            `;
+
+                    } else if (pagekey == 1) {
+                        var row =
+                            `   
+                            <tr>  
+                            <th class="tbr align-middle" scope="row">${i + 1 + start}</th>  
+                            <td class="tbr align-middle">${item.res_user.username}</td>
+                            <td class="tbr align-middle">${item.id}</td>  
+                            <td class="tbr align-middle">${startdate}</td>  
+                            <td class="tbr align-middle">${item.res_start_time.slice(-5)} - ${item.res_dec_time.slice(-5)}</td>
+                            <td class="tbr align-middle">${item.device.name}</td>  
+                            <td class="tbr align-middle">${item.res_end_time}</td>  
+                            <td class="tbr align-middle">${inviter}</td>  
+                            <td>  
+                            <button class="btn btn-primary btn-sm">操作1</button>  
+                            <button class="btn btn-warning btn-sm">操作2</button>  
+                            </td>  
+                            </tr>  
+                            `;
+                    }
+                    table.append(row);
+                };
+            }
+        });
+    };
+
+{% elif "index" in url_name %}
+    function getdays(x){
+        const dates = [];  
+        const today = new Date();  
+        for (let i =1; i <= x; i++) {  
+            // 创建一个新的日期对象 
+            const date = new Date(today);  
+            // 设置日期为今天减去 i 天 
+            date.setDate(today.getDate() - i);  
+            // 格式化日期为 yyyy-mm-dd 
+            const formattedDate = date.toISOString().split('T')[0];  
+            dates.push(formattedDate);  
+        } 
+        return dates.reverse();  
+    };
+
+    function get_Charts() {
+        var day1 = parseInt(document.querySelector("#day1").innerText, 10);
+        var day2 = parseInt(document.querySelector("#day1").innerText, 10);
+        var day3 = parseInt(document.querySelector("#day1").innerText, 10);
+
+        $.ajax({
+            url: '{% url "get_Charts" %}',
+            method: "post",
+            dataType: "text",
+            data: {
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                "day1": day1,
+                "day2": day2,
+                "day3": day3,
+            },
+            success: function (data) {
+                var chartdata = JSON.parse(data);
+                const data1 = chartdata.data1;
+                const data2 = chartdata.data2;
+                const data3 = chartdata.data3;
+
+                var myChart = echarts.init(document.getElementById('myChart-line'));
+                myChart.setOption({
+                    title: {
+                        text: '最近预约数量分布'
+                    },
+                    xAxis: {
+                        type: 'category',
+                        data: getdays(day1),
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [{
+                        data: data1,
+                        type: 'line'
+                    }]
+                });
+
+                var myChartHistogram = echarts.init(document.getElementById('myChart-histogram'));
+                var option = {
+                    title: {
+                        text: '各时段预约数量'
+                    },
+                    tooltip: {},
+                    legend: {
+                        data:['预约量']
+                    },
+                    xAxis: {
+                        data: ["0：00-3：00","3：00-6：00","6：00-9：00","9：00-12：00","12：00-15：00","15:00-18:00","18:00-21:00","21:00-24:00"]
+                    },
+                    yAxis: {},
+                    series: [{
+                        name: '预约量',
+                        type: 'bar',
+                        data: data2,
+                    }]
+                };
+                myChartHistogram.setOption(option);
+
+                var myChartPie = echarts.init(document.getElementById('myChart-pie'));
+                //定义饼图数据
+                var data = [];
+                var len = data3.count.length;
+                
+                for (i = 0; i < len; i++) { 
+                    var dic = {value: data3.count[i], name: data3.names[i]};
+                    data.push(dic);
+                }
+                //定义饼图配置项
+                
+                var option = {
+                        title : {
+                            text: '预约通道分布',
+                            x:'center'
+                        },
+                        tooltip : {
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                        },
+                        legend: {
+                            orient: 'vertical',
+                            left: 'left',
+                            data: data3.name,
+                        },
+                        series : [
+                            {
+                                name: '通道设备',
+                                type: 'pie',
+                                radius : '55%',
+                                center: ['50%', '60%'],
+                                data:data,
+                                itemStyle: {
+                                    emphasis: {
+                                        shadowBlur: 10,
+                                        shadowOffsetX: 0,
+                                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                    }
+                                }
+                            }
+                        ]
+                    };
+                //渲染饼图
+                myChartPie.setOption(option);
+            }
+        });
+    };
+{% endif %}
+
+{% endwith %}
+
+</script>
+
+<script>
+    const toastLiveExample = document.getElementById('liveToast');
+    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+    {% for msg in messages %}
+        if('{{ msg.message }}' != ""){
+            time = new Date().toLocaleTimeString('chinese', { hour12: true });
+            var small = document.querySelector('.text-body-secondary');
+            small.innerHTML = time;
+            toastBootstrap.show();
+        }
+    {% endfor %}
+    
+</script>

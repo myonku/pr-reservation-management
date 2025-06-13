@@ -1,0 +1,25 @@
+{% extends "main.html" %}
+{% load utils %}
+
+{% load static %}
+
+{% block index %}
+<div class="cardview">
+    <div class="cardview_body">
+        {% block resview %}
+        {% endblock resview %}
+        
+        {% with url_name=request.get_full_path %}
+        {% if 'verif' in url_name %}
+        
+        <nav class="pages" aria-label="Page navigation example">
+
+            <ul class="pagination justify-content-center" id="nav">
+            </ul>
+        </nav>
+        {% endif %}
+        {% endwith %}
+    </div>
+   
+</div>
+{% endblock index %}

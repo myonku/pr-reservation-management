@@ -1,0 +1,225 @@
+html {
+  font-size: 14px;
+}
+@media (min-width: 768px) {
+  html {
+    overflow-x: hidden;
+  }
+}
+
+#loader{
+    width: 100%;
+    height: 100vh;
+    background-color: #3a3a3a;
+    animation: fadeInAnimation ease 0.2s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+@keyframes fadeInAnimation {
+    0% {
+        opacity: 0.2;
+    }
+
+    40% {
+        opacity: 1;
+    }
+}
+.sk-cube-grid {
+    width: 50%;
+    height: 50%;
+    margin: auto;
+}
+
+.sk-cube {
+    width: 33%;
+    height: 33%;
+    background-color: #0d89fd;
+    float: left;
+    animation: sk-cube-grid-scale-delay 1.3s infinite ease-in-out;
+}
+
+.sk-cube-1 {
+    animation-delay: 0.2s;
+}
+
+.sk-cube-2 {
+    animation-delay: 0.3s;
+}
+
+.sk-cube-3 {
+    animation-delay: 0.4s;
+}
+
+.sk-cube-4 {
+    animation-delay: 0.1s;
+}
+
+.sk-cube-5 {
+    animation-delay: 0.2s;
+}
+
+.sk-cube-6 {
+    animation-delay: 0.3s;
+}
+
+.sk-cube-7 {
+    animation-delay: 0s;
+}
+
+.sk-cube-8 {
+    animation-delay: 0.1s;
+}
+
+.sk-cube-9 {
+    animation-delay: 0.2s;
+}
+
+@keyframes sk-cube-grid-scale-delay {
+
+    0%,
+    70%,
+    100% {
+        transform: scale3D(1, 1, 1);
+    }
+
+    35% {
+        transform: scale3D(0, 0, 1);
+    }
+}
+
+
+
+.pricing-header {
+  max-width: 700px;
+}
+
+.card-deck .card {
+  min-width: 220px;
+}
+.card{
+    position: relative;
+    transition: all 0.3s ease;
+    will-change: transform;
+    transform: translateZ (1px);
+}
+
+.homeimg{
+    transition: all 0.8s ease;
+    will-change: transform;
+    transform: translateZ (1px);
+}
+.homeimg:hover{
+    transform: scale(1.05) translateZ(-1px);
+}
+.center-top{
+    margin-left: auto;
+    margin-right: auto;
+    overflow: hidden;
+    vertical-align: top;
+}
+.card:hover{
+    transform: scale(1.05) translateZ(-1px);
+}
+.svga, .svg2{
+    padding-bottom: 3px;
+}
+.svg2{
+    color: #0d6efd;
+}
+.svg3{
+    margin-bottom: 3px;
+}
+.wel-info{
+    border-bottom: 2px solid #0d6efd;
+}
+
+.wel-info-1{
+    text-align: left;
+    font-size: 160%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.wel-info-2 {
+    text-align: right;
+    font-size: 140%;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    margin-right: 22px;
+}
+
+a{
+    text-decoration-line: none;
+}
+.as{
+    padding: 8px;
+    transition: all 0.3s ease;
+    border-radius: 5px;
+    border: 1px solid #0d6efd;
+    color: #0d6efd;
+    will-change: transform;
+    transform: translateZ (1px);
+}
+.as:hover{
+    padding: 8px;
+    background-color: #0d6efd;
+    color: white;
+    text-decoration-line: none;
+    font-weight: bold;
+    font-size: 105%;
+}
+#return-top {
+    color: #0d6efd;
+    position: fixed;
+    bottom: 190px;
+    right: 5px;
+    text-align: center;
+    display: none;
+}
+.btngrp{
+    margin-top: 20px;
+}
+.k2{
+    will-change: transform;
+    transition: all 0.3s ease;
+}
+.dp2{
+    text-align: right;
+}
+.btngrs{
+    margin-top: 90px;
+}
+.btn-yc{
+    margin-top: 20px !important;
+    margin-right: 20px;
+}
+.k2:hover{
+    background-color: #0d6efd !important;
+    color: white !important;
+    border-color: #0d6efd !important;
+}
+
+#return-top a {
+    border-radius: 8px;
+    border: 1px solid #0d6efd;
+    color: white;
+    background-color: #0d6efd;
+    display: block;
+    margin: 5px;
+
+    will-change: transform;
+    transition: all 0.3s ease;
+}
+#return-top a:hover{
+    background-color: white;
+    color: #0d6efd;
+    text-decoration: none;
+    display: block;
+    margin: 5px;
+}
+.pages{
+    margin-top: 20px;
+    border-bottom: 2px solid #0d6efd;
+}
+.colls{
+    text-align: right;
+}

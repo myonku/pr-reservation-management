@@ -1,0 +1,36 @@
+{% extends "resview/shape.html" %}
+
+{% block resview %}
+
+    <div style="padding-top:30px; padding-bottom:16px; width: 100%;">
+        <h2>测试-1</h2>
+    </div>
+    <div id="pagekey" style="opacity: 0; height:1px; font-size:1%">
+        1
+    </div>
+    <div id="pagenum" style="opacity: 0; height:1px; font-size:1%">
+        1
+    </div>
+    <div style="margin:20px">
+        <table class="table table-hover table-striped" style="border-top:1px lightgray solid"> 
+            <thead>
+                <tr>
+                    <th class="sorting" scope="col">序号</th>
+                    <th class="sorting" scope="col">用户</th>
+                    <th class="sorting" scope="col">记录ID</th>
+                    <th class="sorting" scope="col">预约日期</th>
+                    <th class="sorting" scope="col">预约时间段</th>
+                    <th class="sorting" scope="col">预约通道</th>
+                    <th class="sorting" scope="col">申请失效时间</th>
+                    <th class="sorting" scope="col">邀请人</th>
+                    <th class="sorting" scope="col">操作</th>
+                </tr>
+            </thead>
+
+            <tbody id="vlist">
+            </tbody>
+        </table>
+    </div>
+    
+
+{% endblock resview %}

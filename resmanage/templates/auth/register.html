@@ -1,0 +1,151 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Jekyll v4.0.1">
+    <link rel="shortcut icon" href="{% static 'images/sd1.png' %}" type="image/x-icon">
+    <title>注册-门禁预约用户</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap-5.3.0/bootstrap.min.css' %}">
+    <!-- Custom styles for this template -->
+    <link href="{%static 'css/album.css'%}css/album.css" rel="stylesheet">
+    <link href="{%static 'css/pricing.css'%}" rel="stylesheet">
+    <!-- Bootstrap core CSS -->
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        @media(min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+    <!-- Custom styles for this template -->
+    <link href="{%static 'css/floating-labels.css'%}" rel="stylesheet">
+</head>
+
+<body>
+    <script src="{%static 'js/jquery-3.3.1.min.js'%}"></script>
+    <script src="{%static 'js/bootstrap-5.3.0/bootstrap.bundle.js'%}"></script>
+    <script type="text/javascript" src="{%static 'js/bootstrapValidator.min.js'%}"></script>
+
+    <form class="form-register" action="{%url 'register'%}" method="post">
+        {% csrf_token %}
+        <div class="text-center mb-1">
+            <img class="mb-4 img" src="{%static 'images/sd0.png'%}" alt="" height="152">
+            <h1 class="h2 mb-3 font-weight-normal"><strong>用户注册</strong></h1>
+            <p><small>这是普通预约用户的注册界面，将仅提供预约功能。内部员工请向管理人员申请账户。</small></p>
+            <p><small>若已有账号，可<a class="tce" href="{%url 'loginAction'%}">前往登录</a></small></p>
+        </div>
+
+        
+        <div class="form-label-group">
+            <input type="text" name="username" id="inputText" class="form-control" placeholder="Username" required autofocus
+                minlength="3" maxlength="10">
+            <label for="inputText">用户名</label>
+        </div>
+        <div class="form-label-group">
+            <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email" autofocus>
+            <label for="inputText">邮箱（可选）</label>
+        </div>
+        <div class="form-label-group">
+            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required
+                minlength="8" maxlength="16">
+            <label for="inputPassword">密码</label>
+        </div>
+        <div class="form-label-group">
+            <input type="password" id="inputPasswordconfirm" class="form-control" placeholder="Passwordconfirm"
+                required minlength="8" maxlength="16">
+            <label for="inputPasswordconfirm">确认密码</label>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-lg btn-primary btn-block" type="submit">注册</button>
+        </div>
+        <p class="mt-3 mb-3 text-muted text-center"><small>若忘记账户密码，请<a class="tce"
+                    href="#">前往验证</a>，或联系管理员：kwkz19171010@gmail.com</small></p>
+        <p class="mt-3 mb-3 text-muted text-center">© 2024 @MyonKu</p>
+    </form>
+    <script>
+        var password = document.getElementById("inputPassword")
+            , confirm_password = document.getElementById("inputPasswordconfirm")
+            , username = document.getElementById("inputText");
+
+        function validatePassword() {
+            if (password.value != confirm_password.value) {
+                confirm_password.setCustomValidity("确认密码与上一条必须相同。");
+            } else {
+                confirm_password.setCustomValidity('');
+            }
+        };
+
+        function checkUsernameAvailability() {
+            $.ajax({
+                url: '{% url "username_validator" %}',
+                method: "POST",
+                dataType: "text",
+                data: { 
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    "username": username.value
+                },
+                success: function(result) {
+                    const data = JSON.parse(result).result; // 解析返回的 JSON
+                    if (data == true) {
+                        username.setCustomValidity("");
+                    } else {
+                        username.setCustomValidity("用户名已被使用，请选择其他用户名。");
+                    }
+                },
+            });
+        };
+
+        username.onchange = checkUsernameAvailability;
+        password.onchange = validatePassword;
+        confirm_password.onkeyup = validatePassword;
+    </script>
+    {% if messages %}
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <img src="{% static 'images/sd1.png' %}" width="22" height="22" class="rounded me-2" alt="...">
+                <strong class="me-auto">系统提示</strong>
+                <small class="text-body-secondary"></small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body text-center">
+                {% for msg in messages %}
+                    {{ msg.message }}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <script>
+        
+        const toastLiveExample = document.getElementById('liveToast');
+        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+        {% for msg in messages %}
+            if('{{ msg.message }}' != ""){
+                time = new Date().toLocaleTimeString('chinese', { hour12: true });
+                var small = document.querySelector('.text-body-secondary');
+                small.innerHTML = time;
+                toastBootstrap.show();
+            }
+        {% endfor %}
+        
+    </script>
+    {% endif %}
+
+</body>
+
+</html>

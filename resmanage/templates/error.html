@@ -1,0 +1,64 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="{% static 'images/sd1.png' %}" type="image/x-icon">
+    <title>测试</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap-5.3.0/bootstrap.min.css' %}">
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/error.css' %}" rel="stylesheet">
+
+</head>
+
+<body>
+    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap-5.3.0/bootstrap.bundle.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/bootstrapValidator.min.js' %}"></script>
+
+    <div class="page-error">
+        <div class="outer">
+            <div class="middle">
+                <div class="inner">
+                    <!--BEGIN CONTENT-->
+                    <div class="inner-circle"><i class="fa fa-home"></i><span id="code"></span></div>
+                    <span class="inner-status">错误！</span>
+                    <span class="inner-detail" id="info">
+                        <br><br>
+                        <a href="{% url "index" %}" class="btn btn-primary">
+                            回到首页
+                        </a> 
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<script>
+    function get_error_data(){
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get("message");
+        $.ajax({
+            url: '{% url "get_error_data" %}',
+            method: "post",
+            dataType: "text",
+            data: {
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                "code": code,
+            },
+            success: function (data) {
+                var data = JSON.parse(data);
+                $("#code").text(data.error);
+                $("#info").prepend(data.info);
+            }
+        })
+    };
+    $(document).ready(function(){
+        get_error_data();  
+    });
+</script>
+</html>

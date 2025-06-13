@@ -1,0 +1,114 @@
+<div class="col-lg-auto d-flex flex-column flex-shrink-0 p-3 text-bg-dark aside">
+    
+    <ul class="nav nav-pills flex-column mb-auto asideul">
+        
+        {% with url_name=request.get_full_path %}
+        {% if 'index' in url_name %}
+        <li class="asidelink">
+            <a href="{% url 'index' %}" class="nav-link text-white {% if "index" in url_name %}active{% endif %}" aria-current="page">
+                概览
+            </a>
+        </li><br>
+        <li class="asidelink">
+            <a href="#" class="nav-link text-white">
+                Dashboard
+            </a>
+        </li><br>
+        <li class="asidelink">
+            <a href="#" class="nav-link text-white">
+                jmaf
+            </a>
+        </li><br>
+        <li class="asidelink">
+            <a href="#" class="nav-link text-white">
+                日志
+            </a>
+        </li>
+        {% elif "verif" in url_name %}
+        <li class="asidelink">
+            <a href="{% url 'audit' %}" class="nav-link text-white {% if "audit" in url_name %}active{% endif %}" aria-current="page">
+                待审核
+            </a>
+        </li><br>
+        <li class="asidelink">
+            <a href="{% url 'navi' %}" class="nav-link text-white {% if "navi" in url_name %}active{% endif %}">
+                全部申请
+            </a>
+        </li><br>
+        <li class="asidelink">
+            <a href="#" class="nav-link text-white">
+                查找
+            </a>
+        </li><br>
+        <li class="asidelink">
+            <a href="{% url 'apd_list' %}" class="nav-link text-white {% if "apd_list" in url_name %}active{% endif %}">
+                通过记录
+            </a>
+        </li><br>
+        <li class="asidelink">
+            <a href="#" class="nav-link text-white">
+                Customers
+            </a>
+        </li>
+
+        {% elif "manage" in url_name %}
+        <li class="asidelink">
+            <a href="{% url 'sep_manage' %}" class="nav-link text-white {% if "smanage" in url_name %}active{% endif %}" aria-current="page">
+                时段管理
+            </a>
+        </li><br>
+        <li class="asidelink">
+            <a href="{% url 'device_manage' %}" class="nav-link text-white {% if "dmanage" in url_name %}active{% endif %}">
+                设备管理
+            </a>
+        </li><br>
+        <li class="asidelink">
+            <a href="#" class="nav-link text-white">
+                Orders
+            </a>
+        </li><br>
+        <li class="asidelink">
+            <a href="#" class="nav-link text-white">
+                Products
+            </a>
+        </li><br>
+        {% elif False %}
+        <li class="asidelink">
+            <a href="" class="nav-link text-white {% if "smanage" in url_name %}active{% endif %}" aria-current="page">
+                用户反馈
+            </a>
+        </li><br>
+        <li class="asidelink">
+            <a href="" class="nav-link text-white {% if "dmanage" in url_name %}active{% endif %}">
+                意见提交
+            </a>
+        </li><br>
+
+        {% endif %}
+        <li class="weali">
+            <div class="weather">
+                <div class="d-flex">
+                    <img id="icon" src="" alt="weather" width="46" height="46">
+                    <div class="justify-content-center align-items-center">
+                        <div class="d-flex">
+                            <strong><p style="margin-top:11px; font-size:120%">当前：</p></strong>
+                            <strong><p style="margin-top:11px; font-size:120%" id="description"></p></strong>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex"><strong><p style="color:yellow;font-size:120%; padding-left:5px; border-bott" id="city"></p></strong></div>
+                <div class="d-flex wec"><p class="wec">当前气温：</p><p class="wec" id="temp"></p><p class="wec">℃</p></div>
+                <div class="d-flex wec"><p class="wec">体感温度：</p><p class="wec" id="feel_temp"></p><p class="wec">℃</p></div>
+                <div class="d-flex wec"><p class="wec">云量：</p><p class="wec" id="clouds"></p><p class="wec">%</p></div>
+                <div class="d-flex wec"><p class="wec">气压：</p><p class="wec" id="pressure"></p><p class="wec">hPa</p></div>
+                <div class="d-flex wec"><p class="wec">湿度：</p><p class="wec" id="humi"></p><p class="wec">%</p></div>
+                <div class="d-flex wec"><p class="wec">风速：</p><p class="wec" id="wind"></p><p class="wec">米/秒</p></div>
+                <div class="d-flex wec"><p class="wec">日出时间：</p><p class="wec" id="sunrise"></p></div>
+                <div class="d-flex wec"><p class="wec">日落时间：</p><p class="wec" id="sunset"></p></div>
+            </div>
+        </li>
+        {% endwith %}
+    </ul>
+</div>
+
+
